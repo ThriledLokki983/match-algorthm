@@ -1,4 +1,4 @@
-from citeria import Criteria
+from criteria import Criteria
 from profile import Profile
 from colorama import Fore
 

@@ -1,5 +1,6 @@
  # Matching algorithm for two profiles based on the profile similarity metric 
 from utils.utility import Utility
+from colorama import Fore
 
 
 class Match(Utility):
@@ -11,20 +12,44 @@ class Match(Utility):
         self.match_list = []
         
     def start_match(self) -> None:
-         profile_goals = self.profile_one.__dict__['goals']
-         for (index, block) in enumerate(self.data):
-            for key, value in block.items():
-                if key == 'goals':
-                    goals = value
-                    for goal in goals.goals:
-                        if goal in profile_goals.goals:
-                            # self.percentage += 1
-                            self.match_list.append(block['profile_id'])
+         self.match_manager(title='goals')
+         self.match_manager(title='interests')
+         print(self.match_list)
+
+    
+    def match_manager(self, title) -> None:
+        self.percentage = 0.0
+        matched_profile = {}
+        profile_title = self.profile_one.__dict__[title]
+        for (index, profile) in enumerate(self.data):
+            for key, value in profile.items():
+                if key == title:
+                    list = value
+                    counter = 0
+                    for list_item in list.goals if title == 'goals' else list.interests:
+                        if list_item in profile_title.goals if title == 'goals' else list_item in profile_title.interests:
+                            counter += 1
+                            if title == 'goals':
+                                self.percentage += 0.33
+                            if title == 'interests':
+                                self.percentage += 0.20
+                    matched_profile["profile_id"] = profile['profile_id']
+                    if title == 'goals':
+                        matched_profile["matched_goals_count"] = counter
+                    if title == 'interests':
+                        for match in self.match_list:
+                            if match['profile_id'] == profile['profile_id']:
+                                match['matched_interests_count'] = counter
+                    
+                    self.match_list.append(matched_profile)
                     self.percentage = 0.0
-                elif key == 'interests':
-                    interests = value
-            # check in the profile list for the goals of the profile that has the same goals
-         print( self.match_list)
+                    counter = 0
+                    matched_profile = {}
+        print('Done!')
+   
+
+    def interest_match(self) -> None:
+        pass
             
     def check_match(self) -> None:
         pass

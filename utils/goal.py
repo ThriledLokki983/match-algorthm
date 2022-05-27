@@ -3,6 +3,5 @@ from utils.printable import Printable
 
 
 class Goal(Printable):
-    def __init__(self, goals, now=None) -> None:
+    def __init__(self, goals) -> None:
         self.goals = goals
-        self.timestamp = time() if now is None else now

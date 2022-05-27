@@ -14,22 +14,23 @@ class Match(Utility):
     def start_match(self) -> None:
          current_profile_goals = len(self.profile_one.__dict__['goals'].goals)
          current_profile_interests = len(self.profile_one.__dict__['interests'].interests)
-         self.match_manager(title='goals')
-         self.match_manager(title='interests')
-         all_matches = self.get_match_list()
-         print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
-         preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
-         print(("=" * 100) + '\n')
-         for x in preferred_match_list:
-             print(Fore.CYAN + str(x))
-         print(("=" * 100) + '\n')
-         print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
+         self.check_matches_for_all_profiles()
+        #  self.match_manager(title='goals')
+        #  self.match_manager(title='interests')
+        #  all_matches = self.get_match_list()
+        #  print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
+        #  preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
+        #  print(("=" * 100) + '\n')
+        #  for x in preferred_match_list:
+        #      print(Fore.CYAN + str(x))
+        #  print(("=" * 100) + '\n')
+        #  print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
 
     
-    def match_manager(self, title) -> None:
+    def match_manager(self, title, current_profile) -> None:
         self.percentage = 0.0
         matched_profile = {}
-        profile_title = self.profile_one.__dict__[title]
+        profile_title = current_profile[title]
         for (index, profile) in enumerate(self.data):
             for key, value in profile.items():
                 if key == title:
@@ -69,8 +70,29 @@ class Match(Utility):
                 pass
         return list
 
-    def interest_match(self) -> None:
-        pass
-            
     def check_match(self) -> None:
         pass
+
+    def check_matches_for_all_profiles(self) -> None:
+        counter = 0
+        for profile in self.data:
+            current_profile_goals = len(profile['goals'].goals)
+            current_profile_interests = len(profile['interests'].interests)
+            self.match_manager(title='goals', current_profile=profile)
+            self.match_manager(title='interests', current_profile=profile)
+            all_matches = self.get_match_list()
+            print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
+            preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
+            print((Fore.CYAN + "=" * 100))
+            for x in preferred_match_list:
+                print(Fore.CYAN + str(x))
+            print(("=" * 100))
+            print(Fore.GREEN + 'Matched profiles: {}'.format(len(preferred_match_list)))
+            print(Fore.CYAN + ("=" * 100) + '\n')
+            self.match_list = []
+            counter += 1
+        print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
+
+
+match = Match('profile_one')
+match.check_matches_for_all_profiles()

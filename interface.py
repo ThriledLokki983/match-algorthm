@@ -25,7 +25,7 @@ class Interface:
         CLI Interface for the program, where users will make choices to actively interact with the program.
         """
         while self.running:
-            print('Application initialized')
+            print(Fore.GREEN + 'Initializing...')
             if self.profile_id is None:
                 print(Fore.RED + 'No profile found. Create a new profile?')
                 user_choice = input(Fore.CYAN + 'y/n: ')

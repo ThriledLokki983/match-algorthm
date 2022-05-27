@@ -1,5 +1,10 @@
-class Account:
-    def __init__(self, profile, goals, interests) -> None:
-        self.goals = goals
-        self.interests = interests
-        self.profile = profile
+from utils.printable import Printable
+from time import time
+
+class Account(Printable):
+    def __init__(self, account_data, now=None) -> None:
+        self.account = account_data
+        self.timestamp = time() if now is None else now
+        
+        
+        

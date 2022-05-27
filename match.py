@@ -4,27 +4,25 @@ from colorama import Fore
 
 
 class Match(Utility):
-    def __init__(self, profile_one) -> None:
+    def __init__(self) -> None:
         super().__init__()
-        # print( self.data)
-        self.profile_one = profile_one
         self.percentage = 0.0
         self.match_list = []
         
-    def start_match(self) -> None:
-         current_profile_goals = len(self.profile_one.__dict__['goals'].goals)
-         current_profile_interests = len(self.profile_one.__dict__['interests'].interests)
-         self.check_matches_for_all_profiles()
-        #  self.match_manager(title='goals')
-        #  self.match_manager(title='interests')
-        #  all_matches = self.get_match_list()
-        #  print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
-        #  preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
-        #  print(("=" * 100) + '\n')
-        #  for x in preferred_match_list:
-        #      print(Fore.CYAN + str(x))
-        #  print(("=" * 100) + '\n')
-        #  print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
+    def start_single_profile_match(self, profile) -> None:
+        # print(profile.__dict__)
+        current_profile_goals = len(profile.__dict__['goals'].goals)
+        current_profile_interests = len(profile.__dict__['interests'].interests)
+        self.match_manager(title='goals', current_profile=profile.__dict__)
+        self.match_manager(title='interests', current_profile=profile.__dict__)
+        all_matches = self.get_match_list()
+        print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals,current_profile_interests))
+        preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
+        print(("=" * 100) + '\n')
+        for x in preferred_match_list:
+            print(Fore.CYAN + str(x))
+        print(("=" * 100) + '\n')
+        print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
 
     
     def match_manager(self, title, current_profile) -> None:
@@ -70,9 +68,6 @@ class Match(Utility):
                 pass
         return list
 
-    def check_match(self) -> None:
-        pass
-
     def check_matches_for_all_profiles(self) -> None:
         counter = 0
         for profile in self.data:
@@ -92,7 +87,3 @@ class Match(Utility):
             self.match_list = []
             counter += 1
         print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
-
-
-match = Match('profile_one')
-match.check_matches_for_all_profiles()

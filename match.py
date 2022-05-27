@@ -12,9 +12,18 @@ class Match(Utility):
         self.match_list = []
         
     def start_match(self) -> None:
+         current_profile_goals = len(self.profile_one.__dict__['goals'].goals)
+         current_profile_interests = len(self.profile_one.__dict__['interests'].interests)
          self.match_manager(title='goals')
          self.match_manager(title='interests')
-         print(self.match_list)
+         all_matches = self.get_match_list()
+         print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
+         preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
+         print(("=" * 100) + '\n')
+         for x in preferred_match_list:
+             print(Fore.CYAN + str(x))
+         print(("=" * 100) + '\n')
+         print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
 
     
     def match_manager(self, title) -> None:
@@ -45,8 +54,20 @@ class Match(Utility):
                     self.percentage = 0.0
                     counter = 0
                     matched_profile = {}
-        print('Done!')
+        if title == 'goals':
+            print(Fore.GREEN + 'Completed matching goals.')
+        if title == 'interests':
+            print(Fore.GREEN + 'Completed matching interests.')
    
+    def get_match_list(self) -> list:
+        list = []
+        for x in self.match_list:
+             try:
+                if x['matched_goals_count']:
+                    list.append(x)
+             except KeyError:
+                pass
+        return list
 
     def interest_match(self) -> None:
         pass

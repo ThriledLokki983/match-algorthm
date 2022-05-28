@@ -20,36 +20,36 @@ class Criteria:
                           'Working more x-LoS with PwC', 'Fostering an inclusive working environment']
         self.interest_list = ['Home', 'Movies',
                               'Sports and outdoors', 'Meditation', 'Scaleups']
-        self.account_info_list = ['Management Level', 
+        self.account_info_list = ['Management Level',
                                   'Start year', 'Gender', 'Birth year']
 
     def get_user_choice(self):
         return input('Your choice: ')
-    
+
     def add_account_data(self, index):
         if int(index) not in self.selected_options and len(self.selected_options) != 4:
-            user_input = input(Fore.CYAN + self.account_info_list[index-1] + ': ')
+            user_input = input(Fore.CYAN + self.account_info_list[index - 1] + ': ')
             self.account_data.insert(index, user_input)
             self.selected_options.append(index)
         else:
             print(Fore.RED + 'Option [ {} ] has already been selected!'.format(index))
             return
-    
+
     def add_goal_data(self, index):
-         if int(index) not in self.selected_options:
-             pass
-        
-    def show_data(self, list, title):
+        if int(index) not in self.selected_options:
+            pass
+
+    def show_data(self, item_list, title):
         print(Fore.BLUE + 'Select a {} from the list below:'.format(title))
-        for i, item in enumerate(list):
-            print(Fore.BLUE + '{}: {}'.format(i+1, item))
+        for i, item in enumerate(item_list):
+            print(Fore.BLUE + '{}: {}'.format(i + 1, item))
         print('q: Continue!')
         print("=" * 50 + '\n')
 
     def get_goals(self) -> None:
         show_available_goals = True
         while show_available_goals:
-            self.show_data(list=self.goal_list, title='goal')
+            self.show_data(item_list=self.goal_list, title='goal')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 self.goals.append('Getting to know new communities in PwC')
@@ -62,11 +62,11 @@ class Criteria:
                 show_available_goals = False
         else:
             print(Fore.GREEN + 'Goals added!' + '\n')
-        
+
     def get_account_data(self) -> None:
         show_available_account_data = True
         while show_available_account_data:
-            self.show_data(list=self.account_info_list, title='account_data')
+            self.show_data(item_list=self.account_info_list, title='account_data')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 self.add_account_data(1)
@@ -84,13 +84,13 @@ class Criteria:
                 print(Fore.RED + 'Option not recognized, please select from list below! or from [1, 2, 3, 4, q]')
                 continue
         else:
-             print(Fore.GREEN + 'Account set up is completed!' + '\n')
-            
+            print(Fore.GREEN + 'Account set up is completed!' + '\n')
+
     def get_interests(self) -> None:
         show_available_interest = True
 
         while show_available_interest:
-            self.show_data(list=self.interest_list, title='interests')
+            self.show_data(item_list=self.interest_list, title='interests')
             user_choice = self.get_user_choice()
             if user_choice == '1':
                 self.interests.append('Home')
@@ -130,7 +130,7 @@ class Criteria:
 
     def begin_matching(self) -> None:
         matching = True
-        
+
         while matching:
             try:
                 self.show_matching_options()
@@ -159,7 +159,6 @@ class Criteria:
         print(self.profile.__dict__)
         self.save_data()
         self.begin_matching()
-
 
 # cri = Criteria()
 # cri.menu()

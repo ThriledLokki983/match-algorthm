@@ -2,12 +2,13 @@ from operator import truediv
 import sys
 import jsonpickle
 from colorama import Fore
-from utils.encoder import Encoder
 from match import Match
+from utils.utility import Utility
 
 
-class Criteria:
+class Criteria(Utility):
     def __init__(self, profile) -> None:
+        super().__init__()
         self.id = profile.profile_id
         self.profile = profile
         self.goals = []
@@ -108,18 +109,6 @@ class Criteria:
         else:
             print(Fore.GREEN + 'Interests added!' + '\n')
 
-    def save_data(self) -> None:
-        try:
-            if self.id is not None:
-                with open('goals-interests-profiles.txt', 'a') as file:
-                    if len(self.profile.goals.goals) > 0 and len(self.profile.interests.interests) > 0:
-                        file.write(jsonpickle.encode(
-                            self.profile) + '\n')
-            else:
-                print(Fore.RED + "No profile found")
-        except IOError:
-            print(Fore.RED + 'Error: Could not save data to file.')
-
     def show_matching_options(self) -> None:
         print(Fore.BLUE + 'Select a matching option:')
         print('1: Print profile details')
@@ -157,7 +146,7 @@ class Criteria:
         self.get_goals()
         self.get_interests()
         print(self.profile.__dict__)
-        self.save_data()
+        self.save_data(self.profile)
         self.begin_matching()
 
 # cri = Criteria()

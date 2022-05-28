@@ -9,12 +9,23 @@ class Match(Utility):
         self.percentage = 0.0
         self.match_list = []
         
+    def get_profile_data(self, profile_id) -> dict:
+        for profile in self.data:
+            if profile['profile_id'] == profile_id:
+                return profile
+        return {}
+
+    # def get_profile_attribute_length(self, profile, attribute) -> list:
+    #     return len(profile.__dict__['{}'.format(attribute)].attribute)
+            
     def start_single_profile_match(self, profile) -> None:
         # print(profile.__dict__)
         current_profile_goals = len(profile.__dict__['goals'].goals)
         current_profile_interests = len(profile.__dict__['interests'].interests)
+        current_profile_account = len(profile.__dict__['account'].account)
         self.match_manager(title='goals', current_profile=profile.__dict__)
         self.match_manager(title='interests', current_profile=profile.__dict__)
+        self.match_manager(title='account', current_profile=profile.__dict__)
         all_matches = self.get_match_list()
         print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals,current_profile_interests))
         preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]
@@ -75,6 +86,7 @@ class Match(Utility):
             current_profile_interests = len(profile['interests'].interests)
             self.match_manager(title='goals', current_profile=profile)
             self.match_manager(title='interests', current_profile=profile)
+            self.match_manager(title='account', current_profile=profile)
             all_matches = self.get_match_list()
             print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals, current_profile_interests))
             preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests]

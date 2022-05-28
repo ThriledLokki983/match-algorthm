@@ -30,6 +30,10 @@ class Profile:
         return OrderedDict([('profile', self.profile_id), ('goals', self.goals), ('interests', self.interests)])
 
     def generate_id(self) -> str:
+        """
+        Generates a random profile id
+        :return:
+        """
         id = ''.join(random.choice(string.ascii_lowercase + string.digits)
                      for _ in range(30))
         return id

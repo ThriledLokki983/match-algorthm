@@ -39,3 +39,8 @@ class Interface:
                 else:
                     print(Fore.RED + 'Invalid input. Exiting...')
                     self.running = False
+
+
+# "account": ["Senior Manager", "2015", "Female", "1990"]
+# account": ["Senior Manager", "2015", "Female", "1990"]
+# "account": ["Senior Manager", "2015"],

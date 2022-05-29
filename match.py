@@ -157,7 +157,7 @@ class Match(Utility):
             self.match_manager(title='account', current_profile=profile)
             all_matches = self.get_match_list()
             print(Fore.GREEN + 'Active Profile [id: {}, Goals: {}, Interests: {}, Account: {}]'.format(profile['profile_id'], current_profile_goals, current_profile_interests, current_profile_account))
-            preferred_match_list = [x for x in all_matches if x['matched_goals_count'] > 0 and x['matched_interests_count'] > 0 and x['matched_account_count'] > 0]
+            preferred_match_list = [x for x in all_matches if x['matched_goals_count'] > 0 or x['matched_interests_count'] > 0 or x['matched_account_count'] > 0]
             print((Fore.CYAN + "=" * 100))
             self.calculate_all_attribute_weight(list=preferred_match_list)
             match_count = 0
@@ -166,7 +166,7 @@ class Match(Utility):
                     pass
                 else:
                     match_count += 1
-                    print(Fore.CYAN + str(x) + '\n')
+                    # print(Fore.CYAN + str(x) + '\n')
             print(("=" * 100))
             print(Fore.GREEN + 'Matched profiles: {}'.format(match_count))
             print(Fore.CYAN + ("=" * 100) + '\n')
@@ -175,5 +175,5 @@ class Match(Utility):
         print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
 
 
-match = Match()
-match.check_matches_for_all_profiles()
+# match = Match()
+# match.check_matches_for_all_profiles()

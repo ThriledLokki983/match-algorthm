@@ -114,38 +114,38 @@ class Criteria(Utility):
         print('1: Print profile details')
         print('2: Start single profile matching')
         print('3: Recalculate profile matching')
-        print('4: print matching results')
+        print('4: print complete profile details')
         print('q: Exit')
 
     def begin_matching(self) -> None:
         matching = True
+        self.match = Match()
+        
 
         while matching:
             try:
                 self.show_matching_options()
                 user_choice = self.get_user_choice()
                 if user_choice == '1':
-                    print(self.profile.__dict__)
+                    print(("=" * 100))
+                    print(self.match.get_profile_data(profile_id=self.id))
+                    print(("=" * 100) + '\n')
                 elif user_choice == '2':
-                    self.match = Match()
                     self.match.start_single_profile_match(profile=self.profile)
                 elif user_choice == '3':
                     self.match.check_matches_for_all_profiles()
                 elif user_choice == '4':
-                    self.profile.match()
+                    self.match.get_matched_profiles_data()
                 elif user_choice == 'q':
                     matching = False
             except (ValueError, TypeError, AttributeError):
                 print(Fore.RED + 'Error: Invalid input')
-                # print the error message
-                print(sys.exc_info()[0])
                 continue
 
     def menu(self) -> None:
         self.get_account_data()
         self.get_goals()
         self.get_interests()
-        print(self.profile.__dict__)
         self.save_data(self.profile)
         self.begin_matching()
 

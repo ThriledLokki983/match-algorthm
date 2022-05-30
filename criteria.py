@@ -120,8 +120,9 @@ class Criteria(Utility):
     def begin_matching(self) -> None:
         matching = True
         self.match = Match()
+        # Recalculate the profile matching score right after the profile is created for all profiles in the database
+        self.match.check_matches_for_all_profiles()
         
-
         while matching:
             try:
                 self.show_matching_options()

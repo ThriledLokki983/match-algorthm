@@ -33,10 +33,10 @@ class Match(Utility):
                 match['total_weight'] =  total_weight
             except KeyError:
                 continue
-        for x in list:
-            if x["profile_id"] == list[0]["profile_id"]:
-                continue
-            print(Fore.YELLOW + str(x) + '\n')
+        # for x in list:
+        #     if x["profile_id"] == list[0]["profile_id"]:
+        #         continue
+        #     print(Fore.YELLOW + str(x) + '\n')
     
     
     def calculate_weight(self, attribute_count, total_count) -> float:
@@ -88,36 +88,41 @@ class Match(Utility):
                 profile_title = current_profile[title]
             else:
                 return
-            # print(profile_title)
-        
         for (index, profile) in enumerate(self.data):
             for key, value in profile.items():
                 if key == title:
                     list = value
-                    counter = 0
+                    counter_matched = 0
+                    counter_unmatched = 0
                     loop_list = self.get_list(title=title, list=list)
                     for list_item in loop_list:
                         inner_loop_list = self.get_inner_list(title=title, profile_t=profile_title)
                         if list_item in inner_loop_list:
-                            counter += 1
+                            counter_matched += 1
                             if title == 'goals':
                                 self.percentage += 0.33
                             if title == 'interests':
                                 self.percentage += 0.20
+                        else:
+                            counter_unmatched += 1
                     matched_profile["profile_id"] = profile['profile_id']
                     if title == 'goals':
-                        matched_profile["matched_goals_count"] = counter
+                        matched_profile["matched_goals_count"] = counter_matched
+                        matched_profile["unmatched_goals_count"] = counter_unmatched
                     if title == 'interests':
                         for match in self.match_list:
                             if match['profile_id'] == profile['profile_id']:
-                                match['matched_interests_count'] = counter
+                                match['matched_interests_count'] = counter_matched
+                                match['unmatched_interests_count'] = counter_unmatched
                     if title == 'account':
                         for match in self.match_list:
                             if match['profile_id'] == profile['profile_id']:
-                                match['matched_account_count'] = counter
+                                match['matched_account_count'] = counter_matched
+                                match['unmatched_account_count'] = counter_unmatched
                     self.match_list.append(matched_profile)
                     self.percentage = 0.0
                     counter = 0
+                    counter_unmatched = 0
                     matched_profile = {}
         if title == 'goals':
             print(Fore.GREEN + 'Completed matching goals.')
@@ -161,6 +166,7 @@ class Match(Utility):
             print((Fore.CYAN + "=" * 100))
             self.calculate_all_attribute_weight(list=preferred_match_list)
             match_count = 0
+            self.print_top_6_matches(list=preferred_match_list, profile=profile)
             for x in preferred_match_list:
                 if x["profile_id"] == profile['profile_id']:
                     pass
@@ -173,7 +179,17 @@ class Match(Utility):
             self.match_list = []
             counter += 1
         print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
+        
+    
+    
+    def print_top_6_matches(self, list, profile) -> None:
+        sorted_weight = sorted(list, key=lambda k: k['total_weight'], reverse=True)
+        for x in sorted_weight[:7]:
+            if x['profile_id'] == profile['profile_id']:
+                pass
+            else:
+                print(Fore.CYAN + str(x) + '\n')
 
 
-# match = Match()
-# match.check_matches_for_all_profiles()
+match = Match()
+match.check_matches_for_all_profiles()

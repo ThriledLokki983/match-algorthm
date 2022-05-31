@@ -58,16 +58,18 @@ class Match(Utility):
         self.match_manager(title='account', current_profile=profile.__dict__)
         
         all_matches = self.get_match_list()
-        print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}]'.format(current_profile_goals,current_profile_interests))
-        preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals and x['matched_interests_count'] >= current_profile_interests and x['matched_account_count'] >= current_profile_account]
+        print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}, Account: {}]'.format(current_profile_goals,current_profile_interests, current_profile_account))
+        preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals or x['matched_interests_count'] >= current_profile_interests or x['matched_account_count'] >= current_profile_account]
         print(("=" * 100) + '\n')
-        for x in preferred_match_list:
+        self.calculate_all_attribute_weight(list=preferred_match_list)
+        sorted_weight = sorted(preferred_match_list, key=lambda k: k['total_weight'], reverse=True)
+        for x in sorted_weight:
             if x["profile_id"] == profile.__dict__["profile_id"]:
-                continue
+                pass
             else:
                 print(Fore.CYAN + str(x))
         print(("=" * 100) + '\n')
-        print(Fore.GREEN + 'Preferred matched profiles: {}'.format(len(preferred_match_list)))
+        print(Fore.GREEN + 'Total matched profiles: {}'.format(len(preferred_match_list)))
     
     
     def get_matched_profiles_data(self) -> list:
@@ -75,6 +77,7 @@ class Match(Utility):
            print(data)
         
     def match_manager(self, title, current_profile) -> None:
+        # self.match_list = []
         self.percentage = 0.0
         matched_profile = {}
         profile_title = None
@@ -108,17 +111,17 @@ class Match(Utility):
                     matched_profile["profile_id"] = profile['profile_id']
                     if title == 'goals':
                         matched_profile["matched_goals_count"] = counter_matched
-                        matched_profile["unmatched_goals_count"] = counter_unmatched
+                        # matched_profile["unmatched_goals_count"] = counter_unmatched
                     if title == 'interests':
                         for match in self.match_list:
                             if match['profile_id'] == profile['profile_id']:
                                 match['matched_interests_count'] = counter_matched
-                                match['unmatched_interests_count'] = counter_unmatched
+                                # match['unmatched_interests_count'] = counter_unmatched
                     if title == 'account':
                         for match in self.match_list:
                             if match['profile_id'] == profile['profile_id']:
                                 match['matched_account_count'] = counter_matched
-                                match['unmatched_account_count'] = counter_unmatched
+                                # match['unmatched_account_count'] = counter_unmatched
                     self.match_list.append(matched_profile)
                     self.percentage = 0.0
                     counter = 0
@@ -191,5 +194,5 @@ class Match(Utility):
                 print(Fore.CYAN + str(x) + '\n')
 
 
-match = Match()
-match.check_matches_for_all_profiles()
+# match = Match()
+# match.check_matches_for_all_profiles()

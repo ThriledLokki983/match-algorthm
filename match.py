@@ -12,15 +12,17 @@ class Match(Utility):
         self.interest_weight = 0.17
         self.account_weight = 0.33
     
+    
+    
     def calculate_all_attribute_weight(self, list) -> float:
         """
         Total: Weight = 1.0 + 3.0 + 2.0 = 6.0 
         ---------------------------------------------------------------------
-        Goals: Weight = 3.0 / 6.0 = 0.5         [number of matched goals]
+        Goals: Weight = 3.0 / 6.0 = 0.50         [number of matched goals]
         Interests: Weight = 1.0 / 6.0 = 0.17    [number of matched interests]
         Account: Weight = 2.0 / 6.0 = 0.33      [number of matched accounts]
         """
-        all_attribute_count = []
+        # all_attribute_count = []
         for match in list:
             total_weight = 0
             try:
@@ -33,21 +35,25 @@ class Match(Utility):
                 match['total_weight'] =  total_weight
             except KeyError:
                 continue
-        # for x in list:
-        #     if x["profile_id"] == list[0]["profile_id"]:
-        #         continue
-        #     print(Fore.YELLOW + str(x) + '\n')
-    
     
     def calculate_weight(self, attribute_count, total_count) -> float:
         return round((attribute_count / total_count) * 100, 0)
+    
+    
+    def calculate_interest_weight() -> float:
+        pass
+         # For interest -- each should have its own weight 1 - 2 - 3 ==> 1, 3 , 10
+    #    (1/10) * 0.17 === 0.017
+      
+      
+      
+      
         
     def get_profile_data(self, profile_id) -> dict:
         for profile in self.data:
             if profile['profile_id'] == profile_id:
                 return profile
         return {}
-
 
     def start_single_profile_match(self, profile) -> None:
         current_profile_goals = len(profile.__dict__['goals'].goals)
@@ -58,8 +64,10 @@ class Match(Utility):
         self.match_manager(title='account', current_profile=profile.__dict__)
         
         all_matches = self.get_match_list()
-        print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}, Account: {}]'.format(current_profile_goals,current_profile_interests, current_profile_account))
+        print(Fore.GREEN + 'Active Profile [Goals: {}, Interests: {}, Account: {}]'.format(current_profile_goals,current_profile_interests, current_profile_interests))
         preferred_match_list = [x for x in all_matches if x['matched_goals_count'] >= current_profile_goals or x['matched_interests_count'] >= current_profile_interests or x['matched_account_count'] >= current_profile_account]
+        self.calculate_all_attribute_weight(list=preferred_match_list)
+        # self.print_top_6_matches(list=preferred_match_list, profile=profile)
         print(("=" * 100) + '\n')
         self.calculate_all_attribute_weight(list=preferred_match_list)
         sorted_weight = sorted(preferred_match_list, key=lambda k: k['total_weight'], reverse=True)
@@ -70,7 +78,6 @@ class Match(Utility):
                 print(Fore.CYAN + str(x))
         print(("=" * 100) + '\n')
         print(Fore.GREEN + 'Total matched profiles: {}'.format(len(preferred_match_list)))
-    
     
     def get_matched_profiles_data(self) -> list:
        for data in [self.get_profile_data(x['profile_id']) for x in self.match_list]:
@@ -134,14 +141,11 @@ class Match(Utility):
         if title == 'account':
             print(Fore.GREEN + 'Completed matching accounts.')
     
-    
     def get_list(self, title, list) -> list:
         return list.goals if title == 'goals' else list.interests if title == 'interests' else list.account
-    
 
     def get_inner_list(self, title, profile_t) -> list:
         return profile_t.goals if title == 'goals' else profile_t.interests if title == 'interests' else profile_t.account if title == 'account' else []
-        
    
     def get_match_list(self) -> list:
         list = []
@@ -152,7 +156,6 @@ class Match(Utility):
              except KeyError:
                 pass
         return list
-
 
     def check_matches_for_all_profiles(self) -> None:
         counter = 0
@@ -182,8 +185,6 @@ class Match(Utility):
             self.match_list = []
             counter += 1
         print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
-        
-    
     
     def print_top_6_matches(self, list, profile) -> None:
         sorted_weight = sorted(list, key=lambda k: k['total_weight'], reverse=True)
@@ -193,6 +194,27 @@ class Match(Utility):
             else:
                 print(Fore.CYAN + str(x) + '\n')
 
+    def check_goal_compatibility(self, profile) -> None:
+        # Goals can be a total of '3' (Weight == 3 == 50%)
+        # total number of goals can be three or less
+        
+        # profile('a', 'b')
+        # profile_2('b', 'c', 'd') -- match of 1 goal
+        
+        # profile('a', 'b')
+        # profile_2('b', 'c', 'd') -- compatible of 1 goal
+        
+        # 75%
+        
+        pass
+        # TODO: get the list of goals for profile and perform a check on other profiles;
+        # If current_profile is looking for someone to coach for example - then it is compatible with any profile that is looking for a coach (Ques: what then is the weight given to a scenario like this)
+        # Have a category of list of goals and if an item from this category is for any two profiles we can say they are compatible
+        # Matched == 1
+        # Unmatched
+        # Compatible == 2
+        
+        
 
 # match = Match()
 # match.check_matches_for_all_profiles()

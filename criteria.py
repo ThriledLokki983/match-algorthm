@@ -15,6 +15,7 @@ class Criteria(Utility):
         self.account_data = []
         self.profiles = []
         self.selected_options = []
+        self.matrix_checklist = []
         self.match = None
         self.goal_list = ['Learning PwC tips & tricks',
                           'Sharing PwC tips & tricks',
@@ -49,7 +50,7 @@ class Criteria(Utility):
         self.matrix = [
         ['Learning PwC tips & tricks', 'Sharing PwC tips & tricks', 'Connecting with other new joiners', 'Connecting with peers', 'Finding a buddy to hang out with', 'Learning about general expectations related to my grade', 'Helping new colleagues to understand PwC ', 'Learning from new perspectives', 'Learn about different specialisms in deals', 'Finding a mentor', 'Find a mentee', 'Learn about a new market', 'Share knowledge about my market', 'Sharing work experiences', 'Finding people working on interesting projects', 'Meeting people that could join my project', 'Learning about networks/initiatives within the firm', 'Finding people to join my network/group', 'Learning technical skills', 'Helping people to learn technical skills', 'Boosting my wellbeing & mental health', 'Looking for a better fit on my skills and talent'],
         ['Learning PwC tips & tricks', True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
-        ['Sharing PwC tips & tricks', False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Sharing PwC tips & tricks', False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Connecting with other new joiners', False, False, True, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Connecting with peers', False, False, False, True, True, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Finding a buddy to hang out with', False, False, False, False, True, False, True, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False],
@@ -65,7 +66,7 @@ class Criteria(Utility):
         ['Finding people working on interesting projects', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False],
         ['Meeting people that could join my project', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Learning about networks/initiatives within the firm', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False],
-        [ 'Finding people to join my network/group', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Finding people to join my network/group', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Learning technical skills', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False],
         ['Helping people to learn technical skills', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
         ['Boosting my wellbeing & mental health', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False],
@@ -178,10 +179,29 @@ class Criteria(Utility):
                 continue
 
     def menu(self) -> None:
+        index_list = []
+        index_list_2 = []
+        other_list = []
+        other_list_2 = []
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
-                if i == j:
+                if self.matrix[i][j] is True:
+                    other_list.append(i)
+                    index_list.append(j)
                     print(self.matrix[i][j])
+        print(index_list)
+        print(other_list)
+        for index in index_list:
+            try:
+                item = self.goal_list[index]
+                if item not in other_list_2:
+                    other_list_2.append(item)
+            except IndexError:
+                pass
+        print(other_list_2)
+        print(len(other_list_2))
+               
+                    
         # self.get_account_data()
         # self.get_goals()
         # self.get_interests()

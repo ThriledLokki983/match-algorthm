@@ -1,6 +1,5 @@
 from operator import truediv
 import sys
-import jsonpickle
 from colorama import Fore
 from match import Match
 from utils.utility import Utility
@@ -18,25 +17,28 @@ class Criteria(Utility):
         self.profiles = []
         self.selected_options = []
         self.match = None
-        self.goal_list = ['Fostering an inclusive working environment',
-                          'Looking for a better fit on my skills and talent',
-                          'Maintaining relationships',
+        self.goal_list = ['Learning PwC tips & tricks',
+                          'Sharing PwC tips & tricks',
+                          'Connecting with other new joiners',
+                          'Connecting with peers',
+                          'Finding a buddy to hang out with',
+                          'Learning about general expectations related to my grade',
+                          'Helping new colleagues to understand PwC ',
+                          'Learning from new perspectives',
+                          'Learn about different specialisms in deals',
+                          'Finding a mentor',
+                          'Find a mentee',
+                          'Learn about a new market',
+                          'Share knowledge about my market',
+                          'Sharing work experiences',
+                          'Finding people working on interesting projects',
+                          'Meeting people that could join my project',
+                          'Learning about networks/initiatives within the firm',
+                          'Finding people to join my network/group',
+                          'Learning technical skills',
+                          'Helping people to learn technical skills',
                           'Boosting my wellbeing & mental health',
-                          'Making my work more meaningful',
-                          'Joining a group',
-                          'Finding people to join my group',
-                          'Making my work more social and fun',
-                          'Working with different people',
-                          'Working more x-LoS',
-                          'Getting new opportunities',
-                          'Gaining visibility',
-                          'Achieving career development goal',
-                          'Being mentored',
-                          'Getting advised',
-                          'Needing help',
-                          'Gaining new knowledge',
-                          'Getting to know new communities in PwC',
-                          'Being more open to new viewpoints'
+                          'Looking for a better fit on my skills and talent'
                           ]
         self.interest_list = ['Scaleups', 'Startups', 'Yoga', 'Weight training', 'Running',
                               'Physical fitness', 'Physical exercise', 'Meditation', 'Bodybuilding',
@@ -94,8 +96,6 @@ class Criteria(Utility):
             self.selected_options = []
             print(Fore.GREEN + 'Profile data added!' + '\n')
             self.profile.set_up_account(self.account_data)
-            # self.profile.__dict__['account'] = self.account_data
-            
             
     
     # Get and save all goals for the profile
@@ -107,9 +107,7 @@ class Criteria(Utility):
             self.selected_options = []
             print(Fore.GREEN + 'Goals added!' + '\n')
             self.profile.set_goals(self.goals)
-            # self.profile.__dict__['goals'] = self.goals
             
-
 
     # Get and save all interests for the profile
     def get_interests(self) -> None:
@@ -120,7 +118,7 @@ class Criteria(Utility):
             self.selected_options = []
             print(Fore.GREEN + 'Interests added!' + '\n')
             self.profile.set_interests(self.interests)
-            # self.profile.__dict__['interests'] = self.interests
+
 
     def show_matching_options(self) -> None:
         print(Fore.BLUE + 'Select a matching option:')

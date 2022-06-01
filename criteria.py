@@ -49,7 +49,7 @@ class Criteria(Utility):
     def get_user_choice(self):
         return input('Your choice: ')
 
-    def add_profile_data(self, data=None, profile_data=None, account=False):
+    def add_profile_data(self, profile_data, data=None, account=False):
         index = self.get_user_choice()
         if account is True:
             try: 
@@ -64,65 +64,63 @@ class Criteria(Utility):
             except ValueError:
                 return
         else:
-            selected_option = int(index) - 1
-            profile_data.insert(selected_option, data[selected_option])
-            # print(f'{Fore.CYAN}You have selected: {data[int(index) - 1]}')
-            print(profile_data)
+            try:
+                if int(index) not in self.selected_options:
+                    selected_option = int(index) - 1
+                    profile_data.insert(selected_option, data[selected_option])
+                    print(profile_data)
+                    self.selected_options.append(int(index))
+                else:
+                    print(Fore.RED + 'Option [ {} ] has already been selected!'.format(index))
+            except (ValueError, IndexError):
+                print(Fore.RED + 'Invalid input!')
+                return
+            
 
-    def add_goal_data(self, index):
-        if int(index) not in self.selected_options:
-            pass
-
-    def show_data(self, item_list, title, data=None, account=False):
+    def show_data(self, item_list, title):
         print(Fore.BLUE + f'Select a {title} from the list below:')
         for i, item in enumerate(item_list):
             print(Fore.BLUE + '{}: {}'.format(i + 1, item))
         print('q: Continue!')
         print("=" * 50 + '\n')
-        self.add_profile_data(data=item_list, profile_data=data, account=account)
+        # self.add_profile_data(data=item_list, profile_data=data, account=account)
 
+    # Get and save all profile attributes
     def get_account_data(self) -> None:
         while len(self.account_data) != len(self.account_info_list):
-            self.show_data(item_list=self.account_info_list, title='account_data', data=self.account_data, account=True)
-        
+            self.show_data(item_list=self.account_info_list, title='account_data')
+            self.add_profile_data(data=self.account_info_list, profile_data=self.account_data, account=True)
+        else:
+            self.selected_options = []
+            print(Fore.GREEN + 'Profile data added!' + '\n')
+            self.profile.set_up_account(self.account_data)
+            # self.profile.__dict__['account'] = self.account_data
+            
+            
+    
+    # Get and save all goals for the profile
     def get_goals(self) -> None:
-        while len(self.goals) <= 3:
+        while len(self.goals) < 3:
             self.show_data(item_list=self.goal_list, title='goal')
-        #     user_choice = self.get_user_choice()
-        #     if user_choice == '1':
-        #         self.goals.append('Getting to know new communities in PwC')
-        #     elif user_choice == '2':
-        #         self.goals.append('Working more x-LoS with PwC')
-        #     elif user_choice == '3':
-        #         self.goals.append('Fostering an inclusive working environment')
-        #     elif user_choice == 'q':
-        #         self.profile.set_goals(data=self.goals)
-        #         show_available_goals = False
-        # else:
-        #     print(Fore.GREEN + 'Goals added!' + '\n')
+            self.add_profile_data(data=self.goal_list, profile_data=self.goals)
+        else:    
+            self.selected_options = []
+            print(Fore.GREEN + 'Goals added!' + '\n')
+            self.profile.set_goals(self.goals)
+            # self.profile.__dict__['goals'] = self.goals
+            
 
 
+    # Get and save all interests for the profile
     def get_interests(self) -> None:
-        show_available_interest = True
-
-        while show_available_interest:
+        while len(self.interests) < 5:
             self.show_data(item_list=self.interest_list, title='interest')
-        #     user_choice = self.get_user_choice()
-        #     if user_choice == '1':
-        #         self.interests.append('Home')
-        #     elif user_choice == '2':
-        #         self.interests.append('Movies')
-        #     elif user_choice == '3':
-        #         self.interests.append('Sports and outdoors')
-        #     elif user_choice == '4':
-        #         self.interests.append('Meditation')
-        #     elif user_choice == '5':
-        #         self.interests.append('Scaleups')
-        #     elif user_choice == 'q':
-        #         self.profile.set_interests(data=self.interests)
-        #         show_available_interest = False
-        # else:
-        #     print(Fore.GREEN + 'Interests added!' + '\n')
+            self.add_profile_data(data=self.interest_list, profile_data=self.interests)
+        else:
+            self.selected_options = []
+            print(Fore.GREEN + 'Interests added!' + '\n')
+            self.profile.set_interests(self.interests)
+            # self.profile.__dict__['interests'] = self.interests
 
     def show_matching_options(self) -> None:
         print(Fore.BLUE + 'Select a matching option:')

@@ -22,7 +22,7 @@ class Match(Utility):
         Interests: Weight = 1.0 / 6.0 = 0.17    [number of matched interests]
         Account: Weight = 2.0 / 6.0 = 0.33      [number of matched accounts]
         """
-        for match in list:
+        for match in list[:]:
             total_weight = 0
             try:
                 if match['matched_goals']:
@@ -49,32 +49,28 @@ class Match(Utility):
                 if self.check_goal_compatibility_part_of_goal(goal=goal, profile=profile_data) is True:
                     pass
                 else:
-                    self.calculate_compatibility(current_profile=current_profile, profile=profile)
+                    self.calculate_compatibility(current_profile=current_profile)
+              
                     
-    def calculate_compatibility(self, current_profile, profile) -> None:
+    def calculate_compatibility(self, current_profile) -> None:
         """
         Calculate compatibility of current profile with other profiles
         """
-        print(str(profile) + '\n')
-        print(str(current_profile) + '\n')  
-        print('*' * 100)      
-        # list = []
-        # for x in profile['goals'].goals:
-        #     if len(current_profile['unmatched_goals']) > 0:
-        #         if x in current_profile['unmatched_goals']:
-        #             list.append(x)
-        
-        # if len(list) > 0:
-        #     print(Fore.YELLOW + ('-' * 100))
-        #     print(str(profile['goals']) + '\n')
-        #     current_profile_data = self.get_profile_data(current_profile['profile_id'])
-        #     print(str(current_profile_data['goals']) + '\n')
-        #     print(Fore.GREEN + str(list) + '\n')
-        #     print(current_profile['unmatched_goals'])
-        #     print(Fore.YELLOW + ('-' * 100))
-        
-        
-        
+        all_list = []
+        if len(current_profile['unmatched_goals'][0]['profile_to_compare_unmatched_items']) == 0:
+            return
+        else:
+            for data in current_profile['unmatched_goals']:
+                print("-" * 50)
+                for x in [*data]:
+                    all_list.append(data[x])
+        if len(all_list) == 0:
+            return
+        else:
+          common = [goal_item for goals in all_list for goal_item in goals] 
+        print(common)
+          
+
         
         
     def check_goal_compatibility_part_of_goal(self, goal, profile) -> bool:
@@ -115,16 +111,6 @@ class Match(Utility):
         pass
          # For interest -- each should have its own weight 1 - 2 - 3 ==> 1, 3 , 10
     #    (1/10) * 0.17 === 0.017
-      
-      
-      
-      
-        
-    def get_profile_data(self, profile_id) -> dict:
-        for profile in self.data:
-            if profile['profile_id'] == profile_id:
-                return profile
-        return {}
 
     def start_single_profile_match(self, profile) -> None:
         current_profile_id = profile['profile_id']
@@ -151,13 +137,9 @@ class Match(Utility):
                 print(Fore.CYAN + str(x))
         print(("=" * 100) + '\n')
         print(Fore.GREEN + 'Total matched profiles: {}'.format(len(preferred_match_list)))
-    
-    def get_matched_profiles_data(self) -> list:
-       for data in [self.get_profile_data(x['profile_id']) for x in self.match_list]:
-           print(data)
+
         
     def match_manager(self, title, current_profile) -> None:
-        # self.match_list = []
         self.percentage = 0.0
         matched_profile = {}
         profile_title = None
@@ -229,28 +211,9 @@ class Match(Utility):
                     counter_matched = 0
                     counter_unmatched = 0
                     matched_profile = {}
-        if title == 'goals':
-            print(Fore.GREEN + 'Completed matching goals.')
-        if title == 'interests':
-            print(Fore.GREEN + 'Completed matching interests.')
-        if title == 'account':
-            print(Fore.GREEN + 'Completed matching accounts.')
+        self.complete(title)
+       
     
-    def get_list(self, title, list) -> list:
-        return list.goals if title == 'goals' else list.interests if title == 'interests' else list.account if title == 'account' else []
-
-    def get_inner_list(self, title, profile_t) -> list:
-        return profile_t.goals if title == 'goals' else profile_t.interests if title == 'interests' else profile_t.account if title == 'account' else []
-   
-    def get_match_list(self) -> list:
-        list = []
-        for x in self.match_list:
-             try:
-                if x['matched_goals']:
-                    list.append(x)
-             except KeyError:
-                pass
-        return list
 
     def check_matches_for_all_profiles(self) -> None:
         counter = 0
@@ -282,15 +245,54 @@ class Match(Utility):
             counter += 1
         print(Fore.YELLOW + 'Completed matching profiles: {}'.format(counter))
     
+    
     def print_top_6_matches(self, list, profile) -> None:
         sorted_weight = sorted(list, key=lambda k: k['total_weight'], reverse=True)
         for x in sorted_weight[:7]:
             if x['profile_id'] == profile['profile_id']:
                 pass
             else:
-                print(Fore.CYAN + str(x) + '\n')
-        
-        
+                # print(Fore.CYAN + str(x) + '\n')
+                pass
 
-match = Match()
-match.check_matches_for_all_profiles()
+    
+    def get_profile_data(self, profile_id) -> dict:
+        for profile in self.data:
+            if profile['profile_id'] == profile_id:
+                return profile
+        return {}
+    
+    
+    def get_match_list(self) -> list:
+        list = []
+        for x in self.match_list:
+             try:
+                if x['matched_goals']:
+                    list.append(x)
+             except KeyError:
+                pass
+        return list  
+        
+        
+    def get_matched_profiles_data(self) -> list:
+       for data in [self.get_profile_data(x['profile_id']) for x in self.match_list]:
+           print(data)
+     
+     
+    def get_inner_list(self, title, profile_t) -> list:
+        return profile_t.goals if title == 'goals' else profile_t.interests if title == 'interests' else profile_t.account if title == 'account' else []      
+    
+    
+    def get_list(self, title, list) -> list:
+        return list.goals if title == 'goals' else list.interests if title == 'interests' else list.account if title == 'account' else []
+     
+    def complete(self, title):
+        if title == 'goals':
+            print(Fore.GREEN + 'Completed matching goals.')
+        if title == 'interests':
+            print(Fore.GREEN + 'Completed matching interests.')
+        if title == 'account':
+            print(Fore.GREEN + 'Completed matching accounts.')
+           
+# match = Match()
+# match.check_matches_for_all_profiles()

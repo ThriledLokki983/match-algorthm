@@ -1,16 +1,15 @@
-from operator import truediv
-import sys
 from colorama import Fore
 from match import Match
 from utils.utility import Utility
 
 
 class Criteria(Utility):
-    def __init__(self, profile) -> None:
+    # def __init__(self, profile) -> None:
+    def __init__(self) -> None:
         super().__init__()
         self.show_available_data = True
-        self.id = profile.profile_id
-        self.profile = profile
+        # self.id = profile.profile_id
+        # self.profile = profile
         self.goals = []
         self.interests = []
         self.account_data = []
@@ -23,7 +22,7 @@ class Criteria(Utility):
                           'Connecting with peers',
                           'Finding a buddy to hang out with',
                           'Learning about general expectations related to my grade',
-                          'Helping new colleagues to understand PwC ',
+                          'Helping new colleagues to understand PwC',
                           'Learning from new perspectives',
                           'Learn about different specialisms in deals',
                           'Finding a mentor',
@@ -47,6 +46,30 @@ class Criteria(Utility):
                               'Pets', 'Garden', 'Home', 'Music', 'Arts'  
                               ]
         self.account_info_list = ['Management Level', 'Start year', 'Gender', 'Birth year']
+        self.matrix = [
+        ['Learning PwC tips & tricks', 'Sharing PwC tips & tricks', 'Connecting with other new joiners', 'Connecting with peers', 'Finding a buddy to hang out with', 'Learning about general expectations related to my grade', 'Helping new colleagues to understand PwC ', 'Learning from new perspectives', 'Learn about different specialisms in deals', 'Finding a mentor', 'Find a mentee', 'Learn about a new market', 'Share knowledge about my market', 'Sharing work experiences', 'Finding people working on interesting projects', 'Meeting people that could join my project', 'Learning about networks/initiatives within the firm', 'Finding people to join my network/group', 'Learning technical skills', 'Helping people to learn technical skills', 'Boosting my wellbeing & mental health', 'Looking for a better fit on my skills and talent'],
+        ['Learning PwC tips & tricks', True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Sharing PwC tips & tricks', False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Connecting with other new joiners', False, False, True, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Connecting with peers', False, False, False, True, True, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Finding a buddy to hang out with', False, False, False, False, True, False, True, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False],
+        ['Learning about general expectations related to my grade', False, False, False, False, False, True, True, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Helping new colleagues to understand PwC', False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, True],
+        ['Learning from new perspectives', False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, True],
+        ['Learn about different specialisms in deals', False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, ],
+        ['Finding a mentor', False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Find a mentee', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Learn about a new market', False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, False],
+        ['Share knowledge about my market', False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False],
+        ['Sharing work experiences', False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False],
+        ['Finding people working on interesting projects', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False],
+        ['Meeting people that could join my project', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Learning about networks/initiatives within the firm', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False],
+        [ 'Finding people to join my network/group', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Learning technical skills', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False],
+        ['Helping people to learn technical skills', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False],
+        ['Boosting my wellbeing & mental health', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False],
+        ['Looking for a better fit on my skills and talent', False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, True]]
 
     def get_user_choice(self):
         return input('Your choice: ')
@@ -130,7 +153,7 @@ class Criteria(Utility):
 
     def begin_matching(self) -> None:
         matching = True
-        self.match = Match()
+        # self.match = Match()
         # Recalculate the profile matching score right after the profile is created for all profiles in the database
         self.match.check_matches_for_all_profiles()
         
@@ -155,11 +178,15 @@ class Criteria(Utility):
                 continue
 
     def menu(self) -> None:
-        self.get_account_data()
-        self.get_goals()
-        self.get_interests()
-        self.save_data(self.profile)
-        self.begin_matching()
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                if i == j:
+                    print(self.matrix[i][j])
+        # self.get_account_data()
+        # self.get_goals()
+        # self.get_interests()
+        # self.save_data(self.profile)
+        # self.begin_matching()
 
-# cri = Criteria()
-# cri.menu()
+cri = Criteria()
+cri.menu()
